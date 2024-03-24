@@ -80,7 +80,6 @@ import {Utils} from "../../../../utils/utils";
  *                   description: Information about the error
  *                   example: Movie not found
  *
- * /api/movies/{idMovie}/comments:
  *   get:
  *     tags: [Comments]
  *     summary: Get comments for a movie

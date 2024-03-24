@@ -3,13 +3,11 @@ import {Utils} from "../../../../../utils/utils";
 import {ObjectId} from "mongodb";
 
 
+
 /**
  * @swagger
- * tags:
- *   name: Comments
- *   summary: Comment Manager
  *
- * /api/movie/{movieId}/comments/{idComment}:
+ * /api/movies/{movieId}/comments/{idComment}:
  *   get:
  *     tags: [Comments]
  *     summary: Get a comment
@@ -35,13 +33,119 @@ import {ObjectId} from "mongodb";
  *             schema:
  *               type: object
  *               properties:
- *                 _id:
+ *                 body:
  *                   type: string
- *                   description: ID of the comment.
- *                 movie_id:
+ *                   description: The comment found
+ *       404:
+ *         description: Comment or movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
  *                   type: string
- *                   description: ID of the movie the comment belongs to.
- *                 // Add other properties of the comment here
+ *                   description: Information about the error
+ *                   example: Comment or movie not found
+ *   put:
+ *     tags: [Comments]
+ *     summary: Update a comment
+ *     description: Updates a comment for a specific movie.
+ *     parameters:
+ *       - in: path
+ *         name: movieId
+ *         description: ID of the movie the comment belongs to.
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: idComment
+ *         description: ID of the comment to update.
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: body
+ *         name: comment
+ *         description: The updated comment object. One of any existing value of comment structure
+ *         required: true
+ *         schema:
+ *           type: object
+ *           example: {email: "mail@mail.com"}
+*
+ *     responses:
+ *       200:
+ *         description: Successfully updated the comment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Information about state
+ *                   example: The comment has been updated successfully
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Information about the error
+ *                   example: Invalid input data
+ *       404:
+ *         description: Comment or movie not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Information about the error
+ *                   example: Comment or movie not found
+ *   delete:
+ *     tags: [Comments]
+ *     summary: Delete a comment
+ *     description: Deletes a comment for a specific movie.
+ *     parameters:
+ *       - in: path
+ *         name: movieId
+ *         description: ID of the movie the comment belongs to.
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: idComment
+ *         description: ID of the comment to delete.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       202:
+ *         description: Successfully deleted the comment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Information about state
+ *                   example: The comment has been deleted successfully
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Information about the error
+ *                   example: Invalid input data
  *       404:
  *         description: Comment or movie not found
  *         content:
@@ -71,6 +175,7 @@ export default async function commentManager(req, res){
     const commentDb = await MongoUtils.findComment(connection, collection, idMovie, idComment)
 
     const docFound = commentDb != null  && Object.keys(commentDb).length !== 0
+
 
     const commentBody = req.body;
     if (docFound){

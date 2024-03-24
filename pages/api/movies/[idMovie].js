@@ -9,7 +9,7 @@ const collection  = "movies";
  * tags:
  *   name: Movies
  *   summary: Movie Manager
- * /api/movie/{idMovie}:
+ * /api/movies/{idMovie}:
  *   get:
  *      summary: Get movie requested
  *      description: Returns the movie requested
@@ -105,6 +105,41 @@ const collection  = "movies";
  *                   message:
  *                     type: string
  *                     example: The requested resource cannot be found.
+ *
+ *   delete:
+ *     tags: [Movies]
+ *     summary: Delete a movie
+ *     description: Deletes a movie by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: movieId
+ *         description: ID of the movie to delete.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully deleted the movie
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Information about state
+ *                   example: The movie has been deleted successfully
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Information about the error
+ *                   example: An unknown error occurred
  */
 
 export default async function movieManager(req, res){
